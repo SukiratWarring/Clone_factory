@@ -10,16 +10,19 @@ contract BlockCardFactory is Initializable,CloneFactory,OwnableUpgradeable,UUPSU
     address[] public clonedcontracts;
 
     event BlockCardCreated(address newBlockCard);
-
+    //initialising
     function initialize( address _recardAddress) initializer  public{
         BlockCardAddress=_recardAddress;
+        __Ownable_init();
     }
+    //creating clone
     function createBlockCard(string memory name) public {
         address clone=createClone(BlockCardAddress);
         BlockCard(clone).initialize(name);
         clonedcontracts.push(clone);
         emit BlockCardCreated(clone);
     }
+    //adding into the array
     function getAddress(uint i) view external returns(address){
         return clonedcontracts[i];
     }

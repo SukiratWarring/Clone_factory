@@ -14,7 +14,8 @@ contract BlockCard is Initializable,UUPSUpgradeable,OwnableUpgradeable {
     }
     Person person; 
     function initialize(string calldata _name) initializer  public{
-     setName(_name);  
+     setName(_name);
+     __Ownable_init();  
     }
     function getname() public view returns(string memory){
         return person.name;
