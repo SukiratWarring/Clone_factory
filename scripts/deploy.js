@@ -5,18 +5,12 @@ async function main(){
     await blockcard.deployed();
     console.log(`The BlockCard contract is depoyed at : ${blockcard.address}`)
 
-
     const BlockCardFactory=await ethers.getContractFactory("BlockCardFactory");
     const blockcardfactory= await upgrades.deployProxy(BlockCardFactory,[process.env.REACT_APP_blockcardcontract],{kind:"uups"});
     await blockcardfactory.deployed();
     console.log(`The BlockCardFactory contract is depoyed at : ${blockcardfactory.address}`)
   
-
-
-
 }
-
-
 
 main()
   .then(() => process.exit(0))

@@ -1,24 +1,22 @@
 const {ethers}=require("hardhat");
 const BlockCardFactoryJSON=require("../artifacts/contracts/BlockCardFactory.sol/BlockCardFactory.json");
+const BlockCardJSON=require("../artifacts/contracts/BlockCard.sol/BlockCard.json");
 async function main(){
-  const BlockCard=await ethers.getContractFactory("BlockCard");
-  const blockcard= await upgrades.deployProxy(BlockCard,["MAJOR CARD"],{kind:"uups"});
-  await blockcard.deployed();
-  blockcardcontractAddress=blockcard.address;
-  console.log(`The BlockCard contract is depoyed at : ${blockcardcontractAddress}`)
-
-  
-  const BlockCardFactory=await ethers.getContractFactory("BlockCardFactory");
-  const blockcardfactory= await upgrades.deployProxy(BlockCardFactory,[blockcardcontractAddress],{kind:"uups"});
-  await blockcardfactory.deployed();
-  const blockcardfactorycontract=blockcardfactory.address;
-  console.log(`The BlockCardFactory contract is depoyed at : ${blockcardfactorycontract}`)
-
+  //FOR FACTORY
   const BlockCardFactoryabi=BlockCardFactoryJSON.abi
   const provider= new ethers.providers.InfuraProvider("rinkeby",process.env.projectid);
   const wallet= new ethers.Wallet(process.env.REACT_APP_key,provider)
   const signer=wallet.connect(provider);
-  const blockcardFactoryContract= await new ethers.Contract(blockcardfactory,BlockCardFactoryabi,signer)
+  const blockcardFactoryContract= await new ethers.Contract(process.env.REACT_APP_blockcardfactory,BlockCardFactoryabi,signer)
+
+  //FOR BLOCKCARD
+  const BlockCardabi=BlockCardJSON.abi
+  const provider_2= new ethers.providers.InfuraProvider("rinkeby",process.env.projectid);
+  const wallet_2= new ethers.Wallet(process.env.REACT_APP_key,provider_2)
+  const signer_2=wallet_2.connect(provider);
+  const blockcardContract= await new ethers.Contract(process.env.REACT_APP_blockcardcontract,BlockCardabi,signer_2)
+
+
   console.log("Making clones");
   //making clones by calling the factory contract
   await blockcardFactoryContract.createBlockCard("Warring",{gasLimit:2000000});
@@ -33,8 +31,9 @@ async function main(){
   
 
 console.log("BEFORE RES")
-  const res= await blockcard(firstaddress).getname();
+  const res= await blockcardContract.getname();
   console.log(res);
+
 }
 main()
   .then(() => process.exit(0))
