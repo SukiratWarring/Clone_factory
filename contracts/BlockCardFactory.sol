@@ -16,15 +16,20 @@ contract BlockCardFactory is Initializable,CloneFactory,OwnableUpgradeable,UUPSU
         __Ownable_init();
     }
     //creating clone
-    function createBlockCard(string memory name) public {
+    function createBlockCard() public {
         address clone=createClone(BlockCardAddress);
-        BlockCard(clone).initialize(name);
+        BlockCard(clone).initialize();
         clonedcontracts.push(clone);
         emit BlockCardCreated(clone);
     }
     //adding into the array
     function getAddress(uint i) view external returns(address){
         return clonedcontracts[i];
+    }
+        //interaction with cloned addresses
+    function interwithClone(address arr)public view returns(string memory){
+        BlockCard cloned=BlockCard(arr);
+        return cloned.getname();
     }
 //UUPS
         function _authorizeUpgrade(address newImplementation)internal override onlyOwner{}
