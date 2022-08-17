@@ -14,13 +14,12 @@ async function main(){
   const provider_2= new ethers.providers.InfuraProvider("rinkeby",process.env.projectid);
   const wallet_2= new ethers.Wallet(process.env.REACT_APP_key,provider_2)
   const signer_2=wallet_2.connect(provider);
-  const blockcardContract= await new ethers.Contract(process.env.REACT_APP_blockcardcontract,BlockCardabi,signer_2)
 
 
   console.log("Making clones");
   //making clones by calling the factory contract
-  await blockcardFactoryContract.createBlockCard("Warring",{gasLimit:2000000});
-  await blockcardFactoryContract.createBlockCard("Singh",{gasLimit:2000000});
+  // await blockcardFactoryContract.createBlockCard({gasLimit:2000000});
+  // await blockcardFactoryContract.createBlockCard({gasLimit:2000000});
   console.log("BEFORE FETCHING ADDRESS")
   const firstaddress=await blockcardFactoryContract.getAddress(0);
   const secondaddress=await blockcardFactoryContract.getAddress(1);
@@ -28,11 +27,13 @@ async function main(){
   console.log(secondaddress);
   console.log("BEFORE CALL");
   //calling the clone contract functions
-  
-
-console.log("BEFORE RES")
-  const res= await blockcardContract.getname();
-  console.log(res);
+  console.log("MAking first address instance")
+  blockcardContractclone=await new ethers.Contract(firstaddress,BlockCardabi,signer_2);
+  console.log("Setting name")
+  // await blockcardContractclone.setName("Sukirat")
+  console.log("Getting name")
+  const FIRSTADDNAME=await blockcardContractclone.getname({gasLimit:200000});
+  console.log(FIRSTADDNAME);
 
 }
 main()
